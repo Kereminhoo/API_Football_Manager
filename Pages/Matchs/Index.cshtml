@@ -1,0 +1,33 @@
+﻿@page
+@model FootManager.Pages.Matchs.IndexModel
+@{
+    ViewData["Title"] = "Calendrier des Matchs";
+}
+
+<div class="container">
+    <h1 class="my-4">Calendrier et Résultats</h1>
+
+    <table class="table table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>Date et Heure</th>
+            <th>Affiche</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var m in Model.Matchs)
+        {
+            <tr>
+                <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@m.NomEquipeDomicile <strong>vs</strong> @m.NomEquipeExterieur</td>
+                <td>
+                    <span class="badge bg-primary fs-6">
+                        @m.ScoreDomicile - @m.ScoreExterieur
+                    </span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
