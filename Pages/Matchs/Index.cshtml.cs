@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages; // Pour PageModel
-using FootManager.Models;                 // Pour trouver la classe Match
-using FootManager.Services;               // Pour trouver MatchService
+﻿using Microsoft.AspNetCore.Mvc.RazorPages; 
+using FootManager.Models;                
+using FootManager.Services;               
 
 namespace FootManager.Pages.Matchs;
 

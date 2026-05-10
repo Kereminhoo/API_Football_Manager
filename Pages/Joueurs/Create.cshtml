@@ -1,0 +1,36 @@
+﻿@page
+@model FootManager.Pages.Joueurs.CreateModel
+
+<h2>Ajouter une recrue</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>Nom</label>
+        <input asp-for="NouveauJoueur.Nom" class="form-control" />
+        <span asp-validation-for="NouveauJoueur.Nom" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Prénom</label>
+        <input asp-for="NouveauJoueur.Prenom" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Poste</label>
+        <select asp-for="NouveauJoueur.Poste" class="form-control">
+            <option value="Gardien">Gardien</option>
+            <option value="Défenseur">Défenseur</option>
+            <option value="Milieu">Milieu</option>
+            <option value="Attaquant">Attaquant</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Numéro de maillot</label>
+        <input asp-for="NouveauJoueur.Numero" class="form-control" type="number" />
+    </div>
+    <div class="mb-3">
+        <label>Équipe</label>
+        <select asp-for="NouveauJoueur.EquipeId" asp-items="Model.ListeEquipes" class="form-control">
+            <option value="">-- Choisir un club --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+</form>

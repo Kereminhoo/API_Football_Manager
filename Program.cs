@@ -20,6 +20,7 @@ builder.Services.AddScoped(_ =>
 
 builder.Services.AddScoped<JoueurService>();
 builder.Services.AddScoped<MatchService>();
+builder.Services.AddScoped<EquipeService>();
 
 var app = builder.Build();
 

@@ -34,4 +34,15 @@ public class JoueurService {
         }
         return joueurs;
     }
+    public void Add(Joueur j)
+    {
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = "INSERT INTO joueurs (nom, prenom, poste, numero, equipe_id) VALUES (@n, @p, @pst, @num, @eid)";
+        cmd.Parameters.AddWithValue("n", j.Nom);
+        cmd.Parameters.AddWithValue("p", j.Prenom);
+        cmd.Parameters.AddWithValue("pst", j.Poste);
+        cmd.Parameters.AddWithValue("num", j.Numero);
+        cmd.Parameters.AddWithValue("eid", j.EquipeId);
+        cmd.ExecuteNonQuery();
+    }
 }

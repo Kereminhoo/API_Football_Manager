@@ -13,6 +13,7 @@ public class MatchService
         _connection = connection;
     }
 
+    
     public List<Match> GetAll()
     {
         var matchs = new List<Match>();
@@ -43,5 +44,25 @@ public class MatchService
             });
         }
         return matchs;
+    }
+
+    
+    public void Add(Match m)
+    {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = @"
+            INSERT INTO matchs (date_match, equipe_domicile_id, equipe_exterieur_id, score_domicile, score_exterieur) 
+            VALUES (@date, @dom, @ext, @sdom, @sext)";
+        
+        
+        cmd.Parameters.AddWithValue("date", m.DateMatch);
+        cmd.Parameters.AddWithValue("dom", m.EquipeDomicileId);
+        cmd.Parameters.AddWithValue("ext", m.EquipeExterieurId);
+        cmd.Parameters.AddWithValue("sdom", m.ScoreDomicile);
+        cmd.Parameters.AddWithValue("sext", m.ScoreExterieur);
+        
+        cmd.ExecuteNonQuery();
     }
 }
