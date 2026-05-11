@@ -1,8 +1,8 @@
-﻿namespace FootManager.Services;
-
-using Npgsql;
+﻿using Npgsql;
 using FootManager.Models;
 using System.Data; 
+
+namespace FootManager.Services;
 
 public class JoueurService {
     private readonly NpgsqlConnection _connection;
@@ -12,14 +12,11 @@ public class JoueurService {
     }
 
     public List<Joueur> GetAll() {
-        
-        if (_connection.State != ConnectionState.Open) {
-            _connection.Open();
-        }
+        if (_connection.State != ConnectionState.Open) _connection.Open();
 
         var joueurs = new List<Joueur>();
         using var cmd = _connection.CreateCommand();
-        cmd.CommandText = "SELECT id, nom, prenom, poste, numero, equipe_id FROM joueurs";
+        cmd.CommandText = "SELECT id, nom, prenom, poste, numero, equipe_id FROM joueurs ORDER BY id DESC";
         
         using var reader = cmd.ExecuteReader(); 
         while (reader.Read()) {
@@ -34,15 +31,19 @@ public class JoueurService {
         }
         return joueurs;
     }
-    public void Add(Joueur j)
-    {
+
+    public void Add(Joueur j) {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+
         using var cmd = _connection.CreateCommand();
         cmd.CommandText = "INSERT INTO joueurs (nom, prenom, poste, numero, equipe_id) VALUES (@n, @p, @pst, @num, @eid)";
+        
         cmd.Parameters.AddWithValue("n", j.Nom);
         cmd.Parameters.AddWithValue("p", j.Prenom);
         cmd.Parameters.AddWithValue("pst", j.Poste);
         cmd.Parameters.AddWithValue("num", j.Numero);
         cmd.Parameters.AddWithValue("eid", j.EquipeId);
+        
         cmd.ExecuteNonQuery();
     }
 }

@@ -24,8 +24,8 @@ public class CreateModel : PageModel
 
     public void OnGet()
     {
-        
         var equipes = _equipeService.GetAll();
+        
         ListeEquipes = new SelectList(equipes, "Id", "Nom");
     }
 
