@@ -24,18 +24,12 @@ public class CreateModel : PageModel
 
     public void OnGet()
     {
-        
         var equipes = _equipeService.GetAll();
         ListeEquipes = new SelectList(equipes, "Id", "Nom");
     }
 
     public IActionResult OnPost()
     {
-        if (NouveauMatch.EquipeDomicileId == NouveauMatch.EquipeExterieurId)
-        {
-            ModelState.AddModelError("", "Une équipe ne peut pas jouer contre elle-même !");
-        }
-
         if (!ModelState.IsValid)
         {
             OnGet();
