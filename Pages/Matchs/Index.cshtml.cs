@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages; 
+﻿using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc.RazorPages; 
 using FootManager.Models;                
 using FootManager.Services;               
 
@@ -18,5 +19,11 @@ public class IndexModel : PageModel
     public void OnGet()
     {
         Matchs = _matchService.GetAll();
+    }
+
+    public IActionResult OnPostDelete(int id)
+    {
+        _matchService.Delete(id);
+        return RedirectToPage(); 
     }
 }

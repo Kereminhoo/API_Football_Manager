@@ -13,15 +13,12 @@ public class MatchService
         _connection = connection;
     }
 
-    
     public List<Match> GetAll()
     {
         var matchs = new List<Match>();
-        
         if (_connection.State != ConnectionState.Open) _connection.Open();
 
         using var cmd = _connection.CreateCommand();
-        
         cmd.CommandText = @"
             SELECT m.id, m.date_match, m.score_domicile, m.score_exterieur, 
                    ed.nom as nom_dom, ee.nom as nom_ext
@@ -46,7 +43,6 @@ public class MatchService
         return matchs;
     }
 
-    
     public void Add(Match m)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
@@ -56,13 +52,23 @@ public class MatchService
             INSERT INTO matchs (date_match, equipe_domicile_id, equipe_exterieur_id, score_domicile, score_exterieur) 
             VALUES (@date, @dom, @ext, @sdom, @sext)";
         
-        
         cmd.Parameters.AddWithValue("date", m.DateMatch);
         cmd.Parameters.AddWithValue("dom", m.EquipeDomicileId);
         cmd.Parameters.AddWithValue("ext", m.EquipeExterieurId);
         cmd.Parameters.AddWithValue("sdom", m.ScoreDomicile);
         cmd.Parameters.AddWithValue("sext", m.ScoreExterieur);
         
+        cmd.ExecuteNonQuery();
+    }
+
+    public void Delete(int id)
+    {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = "DELETE FROM matchs WHERE id = @id";
+        cmd.Parameters.AddWithValue("id", id);
+    
         cmd.ExecuteNonQuery();
     }
 }

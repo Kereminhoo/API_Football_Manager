@@ -8,27 +8,36 @@
     <h1 class="my-4">Calendrier et Résultats</h1>
     <a asp-page="/Matchs/Create" class="btn btn-danger mb-3">Encoder un nouveau match</a>
 
-    <table class="table table-hover">
-        <thead class="table-dark">
-        <tr>
-            <th>Date et Heure</th>
-            <th>Affiche</th>
-            <th>Score</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var m in Model.Matchs)
-        {
+    <div class="card shadow-sm">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
             <tr>
-                <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@m.NomEquipeDomicile <strong>vs</strong> @m.NomEquipeExterieur</td>
-                <td>
-                    <span class="badge bg-primary fs-6">
-                        @m.ScoreDomicile - @m.ScoreExterieur
-                    </span>
-                </td>
+                <th>Date et Heure</th>
+                <th>Affiche</th>
+                <th>Score</th>
+                <th class="text-center">Actions</th>
             </tr>
-        }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @foreach (var m in Model.Matchs)
+            {
+                <tr>
+                    <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@m.NomEquipeDomicile <strong>vs</strong> @m.NomEquipeExterieur</td>
+                    <td>
+                        <span class="badge bg-primary fs-6">
+                            @m.ScoreDomicile - @m.ScoreExterieur
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
+                            <input type="hidden" name="id" value="@m.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 </div>

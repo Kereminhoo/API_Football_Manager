@@ -16,6 +16,7 @@ public class JoueurService {
 
         var joueurs = new List<Joueur>();
         using var cmd = _connection.CreateCommand();
+        
         cmd.CommandText = "SELECT id, nom, prenom, poste, numero, equipe_id FROM joueurs ORDER BY id DESC";
         
         using var reader = cmd.ExecuteReader(); 
@@ -44,6 +45,16 @@ public class JoueurService {
         cmd.Parameters.AddWithValue("num", j.Numero);
         cmd.Parameters.AddWithValue("eid", j.EquipeId);
         
+        cmd.ExecuteNonQuery();
+    }
+    
+    public void Delete(int id) {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = "DELETE FROM joueurs WHERE id = @id";
+        cmd.Parameters.AddWithValue("id", id);
+    
         cmd.ExecuteNonQuery();
     }
 }
