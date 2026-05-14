@@ -4,40 +4,51 @@
     ViewData["Title"] = "Effectif Galatasaray";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-danger">Effectif du club</h1>
-    <a asp-page="/Joueurs/Create" class="btn btn-primary">+ Ajouter un joueur</a>
-</div>
+<div class="container mt-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-danger">Effectif du club</h1>
+        <a asp-page="/Joueurs/Create" class="btn btn-danger">
+            + Ajouter un joueur
+        </a>
+    </div>
 
-<div class="card shadow-sm">
-    <table class="table table-hover mb-0">
-        <thead class="table-dark">
-        <tr>
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th>Poste</th>
-            <th>Numéro</th>
-            <th class="text-center">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var joueur in Model.Joueurs) {
+    <div class="card shadow-sm">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
             <tr>
-                <td>@joueur.Prenom</td>
-                <td>@joueur.Nom</td>
-                <td>@joueur.Poste</td>
-                <td><span class="badge bg-secondary">@joueur.Numero</span></td>
-                <td class="text-center">
-                    
-                    <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Voulez-vous vraiment supprimer @joueur.Prenom @joueur.Nom ?');">
-                        <input type="hidden" name="id" value="@joueur.Id" />
-                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                            Supprimer
-                        </button>
-                    </form>
-                </td>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Poste</th>
+                <th>Numéro</th>
+                <th class="text-center">Actions</th>
             </tr>
-        }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @foreach (var joueur in Model.Joueurs) {
+                <tr>
+                    <td>@joueur.Prenom</td>
+                    <td>@joueur.Nom</td>
+                    <td>@joueur.Poste</td>
+                    <td><span class="badge bg-secondary">@joueur.Numero</span></td>
+                    <td class="text-center">
+                        <div class="d-flex gap-2 justify-content-center">
+                            
+                            <a asp-page="/Joueurs/Edit" asp-route-id="@joueur.Id" class="btn btn-sm btn-outline-warning">
+                                Modifier
+                            </a>
+
+                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Voulez-vous vraiment supprimer @joueur.Prenom @joueur.Nom ?');">
+                                <input type="hidden" name="id" value="@joueur.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 </div>

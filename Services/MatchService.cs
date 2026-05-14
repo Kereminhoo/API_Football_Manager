@@ -43,10 +43,31 @@ public class MatchService
         return matchs;
     }
 
+    
+    public Match? GetById(int id)
+    {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = "SELECT id, date_match, score_domicile, score_exterieur FROM matchs WHERE id = @id";
+        cmd.Parameters.AddWithValue("id", id);
+
+        using var reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            return new Match
+            {
+                Id = reader.GetInt32(0),
+                DateMatch = reader.GetDateTime(1),
+                ScoreDomicile = reader.GetInt32(2),
+                ScoreExterieur = reader.GetInt32(3)
+            };
+        }
+        return null;
+    }
+
     public void Add(Match m)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
-
         using var cmd = _connection.CreateCommand();
         cmd.CommandText = @"
             INSERT INTO matchs (date_match, equipe_domicile_id, equipe_exterieur_id, score_domicile, score_exterieur) 
@@ -57,18 +78,32 @@ public class MatchService
         cmd.Parameters.AddWithValue("ext", m.EquipeExterieurId);
         cmd.Parameters.AddWithValue("sdom", m.ScoreDomicile);
         cmd.Parameters.AddWithValue("sext", m.ScoreExterieur);
+        cmd.ExecuteNonQuery();
+    }
+
+    
+    public void Update(Match m)
+    {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+        using var cmd = _connection.CreateCommand();
+        cmd.CommandText = @"
+            UPDATE matchs 
+            SET date_match = @date, score_domicile = @sdom, score_exterieur = @sext 
+            WHERE id = @id";
         
+        cmd.Parameters.AddWithValue("date", m.DateMatch);
+        cmd.Parameters.AddWithValue("sdom", m.ScoreDomicile);
+        cmd.Parameters.AddWithValue("sext", m.ScoreExterieur);
+        cmd.Parameters.AddWithValue("id", m.Id);
         cmd.ExecuteNonQuery();
     }
 
     public void Delete(int id)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
-
         using var cmd = _connection.CreateCommand();
         cmd.CommandText = "DELETE FROM matchs WHERE id = @id";
         cmd.Parameters.AddWithValue("id", id);
-    
         cmd.ExecuteNonQuery();
     }
 }

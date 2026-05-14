@@ -6,8 +6,12 @@
 
     <form method="post" class="mt-4">
         <div class="mb-3">
-            <label class="form-label">Date du match</label>
-            <input asp-for="NouveauMatch.DateMatch" class="form-control" type="datetime-local" />
+            <label class="form-label">Date et Heure du Match</label>
+            <input asp-for="NouveauMatch.DateMatch" 
+                   class="form-control" 
+                   type="datetime-local" 
+                   value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="NouveauMatch.DateMatch" class="text-danger"></span>
         </div>
 
         <div class="row">

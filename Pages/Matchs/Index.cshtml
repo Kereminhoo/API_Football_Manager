@@ -4,9 +4,14 @@
     ViewData["Title"] = "Calendrier des Matchs";
 }
 
-<div class="container">
-    <h1 class="my-4">Calendrier et Résultats</h1>
-    <a asp-page="/Matchs/Create" class="btn btn-danger mb-3">Encoder un nouveau match</a>
+<div class="container mt-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-danger">Calendrier et Résultats</h1>
+        <a asp-page="/Matchs/Create" class="btn btn-danger">
+            + Encoder un match
+        </a>
+    </div>
 
     <div class="card shadow-sm">
         <table class="table table-hover mb-0">
@@ -30,10 +35,15 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
-                            <input type="hidden" name="id" value="@m.Id" />
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
+                        <div class="d-flex gap-2 justify-content-center">
+                            
+                            <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier</a>
+                            
+                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
+                                <input type="hidden" name="id" value="@m.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             }

@@ -1,0 +1,42 @@
+﻿@page "{id:int}"
+@model FootManager.Pages.Matchs.Edit
+@{
+    ViewData["Title"] = "Modifier Match";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 card shadow p-4 border-danger">
+            <h2 class="text-danger mb-4">Modifier le résultat</h2>
+
+            <form method="post">
+                <input type="hidden" asp-for="Match.Id" />
+
+                <div class="mb-3">
+                    <label class="form-label">Date et Heure du Match</label>
+                    <input asp-for="Match.DateMatch" 
+                           class="form-control" 
+                           type="datetime-local" 
+                           value="@Model.Match.DateMatch.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="Match.DateMatch" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Score Domicile</label>
+                        <input asp-for="Match.ScoreDomicile" class="form-control" type="number" min="0" max="99" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Score Extérieur</label>
+                        <input asp-for="Match.ScoreExterieur" class="form-control" type="number" min="0" max="99" />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-page="/Matchs/Index" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-danger">Sauvegarder les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
