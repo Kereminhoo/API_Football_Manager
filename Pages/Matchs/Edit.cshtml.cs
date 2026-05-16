@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization; 
 using FootManager.Models;
 using FootManager.Services;
 
 namespace FootManager.Pages.Matchs;
 
+[Authorize(Roles = "Admin")] 
 public class Edit : PageModel
 {
     private readonly MatchService _matchService;

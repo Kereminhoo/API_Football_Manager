@@ -8,10 +8,23 @@
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-danger">Calendrier et Résultats</h1>
-        <a asp-page="/Matchs/Create" class="btn btn-danger">
-            + Encoder un match
-        </a>
+        
+        @if (User.IsInRole("Admin")) {
+            <a asp-page="/Matchs/Create" class="btn btn-danger">
+                + Encoder un match
+            </a>
+        }
     </div>
+
+    <form method="get" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm border">
+        <div class="col-md-9">
+            <input type="text" asp-for="SearchTerm" class="form-control" placeholder="Rechercher une rencontre par nom de club..." />
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+            <a asp-page="/Matchs/Index" class="btn btn-secondary w-100">Reset</a>
+        </div>
+    </form>
 
     <div class="card shadow-sm">
         <table class="table table-hover mb-0">
@@ -20,10 +33,18 @@
                 <th>Date et Heure</th>
                 <th>Affiche</th>
                 <th>Score</th>
-                <th class="text-center">Actions</th>
+                @if (User.IsInRole("Admin")) {
+                    <th class="text-center">Actions</th>
+                }
             </tr>
             </thead>
             <tbody>
+            @if (!Model.Matchs.Any())
+            {
+                <tr>
+                    <td colspan="@(User.IsInRole("Admin") ? 4 : 3)" class="text-center text-muted py-4">Aucune rencontre ne correspond à vos critères de recherche.</td>
+                </tr>
+            }
             @foreach (var m in Model.Matchs)
             {
                 <tr>
@@ -34,20 +55,49 @@
                             @m.ScoreDomicile - @m.ScoreExterieur
                         </span>
                     </td>
-                    <td class="text-center">
-                        <div class="d-flex gap-2 justify-content-center">
-                            
-                            <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier</a>
-                            
-                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
-                                <input type="hidden" name="id" value="@m.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                            </form>
-                        </div>
-                    </td>
+                    
+                    @if (User.IsInRole("Admin")) {
+                        <td class="text-center">
+                            <div class="d-flex gap-2 justify-content-center">
+                                
+                                <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                
+                                <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
+                                    <input type="hidden" name="id" value="@m.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    }
                 </tr>
             }
             </tbody>
         </table>
     </div>
+
+    @if (Model.TotalPages > 1) {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-page="/Matchs/Index" 
+                       asp-route-CurrentPage="@(Model.CurrentPage - 1)" 
+                       asp-route-SearchTerm="@Model.SearchTerm">Précédent</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++) {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-page="/Matchs/Index" 
+                           asp-route-CurrentPage="@i" 
+                           asp-route-SearchTerm="@Model.SearchTerm">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-page="/Matchs/Index" 
+                       asp-route-CurrentPage="@(Model.CurrentPage + 1)" 
+                       asp-route-SearchTerm="@Model.SearchTerm">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+    }
 </div>

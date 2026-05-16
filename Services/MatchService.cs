@@ -44,6 +44,62 @@ public class MatchService
     }
 
     
+    public List<Match> GetFiltered(string? search, int page, int pageSize, out int totalCount)
+    {
+        if (_connection.State != ConnectionState.Open) _connection.Open();
+
+        string searchPattern = string.IsNullOrEmpty(search) ? "%" : $"%{search}%";
+        
+        using (var cmdCount = _connection.CreateCommand())
+        {
+            cmdCount.CommandText = @"
+                SELECT COUNT(*) 
+                FROM matchs m
+                JOIN equipes ed ON m.equipe_domicile_id = ed.id
+                JOIN equipes ee ON m.equipe_exterieur_id = ee.id
+                WHERE ed.nom ILIKE @s OR ee.nom ILIKE @s";
+            
+            cmdCount.Parameters.AddWithValue("s", searchPattern);
+            totalCount = Convert.ToInt32(cmdCount.ExecuteScalar());
+        }
+
+        
+        var matchs = new List<Match>();
+        int offset = (page - 1) * pageSize;
+
+        using (var cmdData = _connection.CreateCommand())
+        {
+            cmdData.CommandText = @"
+                SELECT m.id, m.date_match, m.score_domicile, m.score_exterieur, 
+                       ed.nom as nom_dom, ee.nom as nom_ext
+                FROM matchs m
+                JOIN equipes ed ON m.equipe_domicile_id = ed.id
+                JOIN equipes ee ON m.equipe_exterieur_id = ee.id
+                WHERE ed.nom ILIKE @s OR ee.nom ILIKE @s
+                ORDER BY m.date_match DESC
+                LIMIT @limit OFFSET @offset";
+
+            cmdData.Parameters.AddWithValue("s", searchPattern);
+            cmdData.Parameters.AddWithValue("limit", pageSize);
+            cmdData.Parameters.AddWithValue("offset", offset);
+
+            using var reader = cmdData.ExecuteReader();
+            while (reader.Read())
+            {
+                matchs.Add(new Match
+                {
+                    Id = reader.GetInt32(0),
+                    DateMatch = reader.GetDateTime(1),
+                    ScoreDomicile = reader.GetInt32(2),
+                    ScoreExterieur = reader.GetInt32(3),
+                    NomEquipeDomicile = reader.GetString(4),
+                    NomEquipeExterieur = reader.GetString(5)
+                });
+            }
+        }
+        return matchs;
+    }
+
     public Match? GetById(int id)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
@@ -81,7 +137,6 @@ public class MatchService
         cmd.ExecuteNonQuery();
     }
 
-    
     public void Update(Match m)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();

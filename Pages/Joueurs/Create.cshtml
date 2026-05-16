@@ -11,36 +11,40 @@
 
             <form method="post">
                 <div class="mb-3">
-                    <label class="form-label">Nom</label>
+                    <label class="form-label fw-bold">Nom</label>
                     <input asp-for="NouveauJoueur.Nom" class="form-control" placeholder="Nom du joueur" />
-                    <span asp-validation-for="NouveauJoueur.Nom" class="text-danger"></span>
+                    <span asp-validation-for="NouveauJoueur.Nom" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Prénom</label>
+                    <label class="form-label fw-bold">Prénom</label>
                     <input asp-for="NouveauJoueur.Prenom" class="form-control" placeholder="Prénom du joueur" />
+                    <span asp-validation-for="NouveauJoueur.Prenom" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Poste</label>
+                    <label class="form-label fw-bold">Poste</label>
                     <select asp-for="NouveauJoueur.Poste" class="form-select">
                         <option value="Gardien">Gardien</option>
                         <option value="Défenseur">Défenseur</option>
                         <option value="Milieu">Milieu</option>
                         <option value="Attaquant">Attaquant</option>
                     </select>
+                    <span asp-validation-for="NouveauJoueur.Poste" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Numéro de maillot</label>
-                    <input asp-for="NouveauJoueur.Numero" class="form-control" type="number" min="1" max="99" />
+                    <label class="form-label fw-bold">Numéro de maillot</label>
+                    <input asp-for="NouveauJoueur.Numero" class="form-control" type="number" />
+                    <span asp-validation-for="NouveauJoueur.Numero" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Équipe</label>
+                    <label class="form-label fw-bold">Équipe</label>
                     <select asp-for="NouveauJoueur.EquipeId" asp-items="Model.ListeEquipes" class="form-select">
                         <option value="">-- Sélectionner le club --</option>
                     </select>
+                    <span asp-validation-for="NouveauJoueur.EquipeId" class="text-danger small"></span>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">

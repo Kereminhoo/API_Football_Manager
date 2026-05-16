@@ -7,47 +7,49 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-6 card shadow p-4 border-warning">
-            <h2 class="mb-4">Modifier : @Model.Joueur.Prenom @Model.Joueur.Nom</h2>
+            <h2 class="mb-4 text-warning">Modifier : @Model.Joueur.Prenom @Model.Joueur.Nom</h2>
 
             <form method="post">
-                
                 <input type="hidden" asp-for="Joueur.Id" />
 
                 <div class="mb-3">
-                    <label class="form-label">Nom</label>
+                    <label class="form-label fw-bold">Nom</label>
                     <input asp-for="Joueur.Nom" class="form-control" />
-                    <span asp-validation-for="Joueur.Nom" class="text-danger"></span>
+                    <span asp-validation-for="Joueur.Nom" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Prénom</label>
+                    <label class="form-label fw-bold">Prénom</label>
                     <input asp-for="Joueur.Prenom" class="form-control" />
+                    <span asp-validation-for="Joueur.Prenom" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Poste</label>
+                    <label class="form-label fw-bold">Poste</label>
                     <select asp-for="Joueur.Poste" class="form-select">
                         <option value="Gardien">Gardien</option>
                         <option value="Défenseur">Défenseur</option>
                         <option value="Milieu">Milieu</option>
                         <option value="Attaquant">Attaquant</option>
                     </select>
+                    <span asp-validation-for="Joueur.Poste" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Numéro de maillot</label>
-                    <input asp-for="Joueur.Numero" class="form-control" type="number" min="1" max="99" />
-                    <span asp-validation-for="Joueur.Numero" class="text-danger"></span>
+                    <label class="form-label fw-bold">Numéro de maillot</label>
+                    <input asp-for="Joueur.Numero" class="form-control" type="number" />
+                    <span asp-validation-for="Joueur.Numero" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Équipe</label>
+                    <label class="form-label fw-bold">Équipe</label>
                     <select asp-for="Joueur.EquipeId" asp-items="Model.ListeEquipes" class="form-select"></select>
+                    <span asp-validation-for="Joueur.EquipeId" class="text-danger small"></span>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
                     <a asp-page="/Index" class="btn btn-secondary">Annuler</a>
-                    <button type="submit" class="btn btn-warning">Enregistrer les modifications</button>
+                    <button type="submit" class="btn btn-warning text-white">Enregistrer les modifications</button>
                 </div>
             </form>
         </div>

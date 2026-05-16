@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering; 
+using Microsoft.AspNetCore.Authorization; 
 using FootManager.Models;
 using FootManager.Services;
 
 namespace FootManager.Pages.Joueurs;
 
+[Authorize(Roles = "Admin")] 
 public class Edit : PageModel
 {
     private readonly JoueurService _joueurService;

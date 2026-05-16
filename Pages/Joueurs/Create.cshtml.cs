@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering; 
+using Microsoft.AspNetCore.Authorization; 
 using FootManager.Models;
 using FootManager.Services;
 
 namespace FootManager.Pages.Joueurs;
 
+[Authorize(Roles = "Admin")] 
 public class CreateModel : PageModel
 {
     private readonly JoueurService _joueurService;
@@ -25,7 +27,6 @@ public class CreateModel : PageModel
     public void OnGet()
     {
         var equipes = _equipeService.GetAll();
-        
         ListeEquipes = new SelectList(equipes, "Id", "Nom");
     }
 

@@ -1,0 +1,43 @@
+﻿@page
+@model FootManager.Pages.LoginModel
+@{
+    ViewData["Title"] = "Connexion - Galatasaray";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-dark text-center">
+                    <h4 class="text-danger fw-bold my-2">GS FOOT MANAGER</h4>
+                </div>
+                <div class="card-body p-4 bg-light">
+                    <h5 class="text-center mb-4 text-muted">Espace Staff Technique</h5>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger p-2 text-center small" role="alert">
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Adresse Email</label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="nom@galatasaray.com" required />
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Mot de passe</label>
+                            <input type="password" asp-for="Password" class="form-control" placeholder="••••••••" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100 py-2">
+                            Se connecter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

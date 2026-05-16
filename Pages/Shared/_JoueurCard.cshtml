@@ -1,0 +1,38 @@
+﻿@model FootManager.Models.Joueur
+
+<div class="col">
+    <div class="card h-100 shadow-sm border-danger">
+        
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <span class="badge bg-danger fs-6">#@Model.Numero</span>
+            <span class="badge bg-secondary">@Model.Poste</span>
+        </div>
+        
+        <div class="card-body text-center bg-light">
+            <h5 class="card-title text-danger fw-bold mb-0 py-2">
+                @Model.Prenom @Model.Nom
+            </h5>
+        </div>
+        
+        <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3 border-top-0">
+            
+            <a asp-page="/Joueurs/Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">
+                Détails
+            </a>
+
+            
+            @if (User.IsInRole("Admin")) {
+                <a asp-page="/Joueurs/Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-warning">
+                    Modifier
+                </a>
+
+                <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Voulez-vous vraiment supprimer @Model.Prenom @Model.Nom ?');" class="d-inline">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        Supprimer
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

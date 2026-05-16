@@ -8,47 +8,80 @@
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-danger">Effectif du club</h1>
-        <a asp-page="/Joueurs/Create" class="btn btn-danger">
-            + Ajouter un joueur
-        </a>
-    </div>
+        
+        <div class="d-flex gap-2">
+            
+            <form method="post" asp-page-handler="ExportCsv" class="d-inline">
+                <button type="submit" class="btn btn-outline-success">
+                    Exporter l'effectif (CSV)
+                </button>
+            </form>
 
-    <div class="card shadow-sm">
-        <table class="table table-hover mb-0">
-            <thead class="table-dark">
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Poste</th>
-                <th>Numéro</th>
-                <th class="text-center">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var joueur in Model.Joueurs) {
-                <tr>
-                    <td>@joueur.Prenom</td>
-                    <td>@joueur.Nom</td>
-                    <td>@joueur.Poste</td>
-                    <td><span class="badge bg-secondary">@joueur.Numero</span></td>
-                    <td class="text-center">
-                        <div class="d-flex gap-2 justify-content-center">
-                            
-                            <a asp-page="/Joueurs/Edit" asp-route-id="@joueur.Id" class="btn btn-sm btn-outline-warning">
-                                Modifier
-                            </a>
-
-                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Voulez-vous vraiment supprimer @joueur.Prenom @joueur.Nom ?');">
-                                <input type="hidden" name="id" value="@joueur.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    Supprimer
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
+            @if (User.IsInRole("Admin")) {
+                <a asp-page="/Joueurs/Create" class="btn btn-danger">
+                    + Ajouter un joueur
+                </a>
             }
-            </tbody>
-        </table>
+        </div>
     </div>
+
+    <form method="get" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm border">
+        <div class="col-md-5">
+            <input type="text" asp-for="SearchTerm" class="form-control" placeholder="Rechercher par nom ou prénom..." />
+        </div>
+        <div class="col-md-4">
+            <select asp-for="PosteFilter" class="form-select">
+                <option value="">-- Tous les postes --</option>
+                <option value="Gardien">Gardien</option>
+                <option value="Défenseur">Défenseur</option>
+                <option value="Milieu">Milieu</option>
+                <option value="Attaquant">Attaquant</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+            <a asp-page="/Index" class="btn btn-secondary w-100">Reset</a>
+        </div>
+    </form>
+
+    @if (!Model.Joueurs.Any()) {
+        <div class="alert alert-warning text-center py-4 shadow-sm" role="alert">
+            Aucun joueur trouvé avec les critères sélectionnés.
+        </div>
+    } else {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var joueur in Model.Joueurs) {
+                <partial name="Shared/_JoueurCard" model="joueur" />
+            }
+        </div>
+    }
+
+    @if (Model.TotalPages > 1) {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-page="/Index" 
+                       asp-route-CurrentPage="@(Model.CurrentPage - 1)" 
+                       asp-route-SearchTerm="@Model.SearchTerm" 
+                       asp-route-PosteFilter="@Model.PosteFilter">Précédent</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++) {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-page="/Index" 
+                           asp-route-CurrentPage="@i" 
+                           asp-route-SearchTerm="@Model.SearchTerm" 
+                           asp-route-PosteFilter="@Model.PosteFilter">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-page="/Index" 
+                       asp-route-CurrentPage="@(Model.CurrentPage + 1)" 
+                       asp-route-SearchTerm="@Model.SearchTerm" 
+                       asp-route-PosteFilter="@Model.PosteFilter">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+    }
 </div>
