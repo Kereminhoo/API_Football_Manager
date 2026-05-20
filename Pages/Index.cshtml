@@ -1,87 +1,115 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Effectif Galatasaray";
+    ViewData["Title"] = "Bienvenue - Galatasaray SK";
 }
 
-<div class="container mt-4">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-danger">Effectif du club</h1>
-        
-        <div class="d-flex gap-2">
-            
-            <form method="post" asp-page-handler="ExportCsv" class="d-inline">
-                <button type="submit" class="btn btn-outline-success">
-                    Exporter l'effectif (CSV)
-                </button>
-            </form>
-
-            @if (User.IsInRole("Admin")) {
-                <a asp-page="/Joueurs/Create" class="btn btn-danger">
-                    + Ajouter un joueur
-                </a>
-            }
+<div class="container mt-5">
+    <div class="row align-items-center bg-light p-5 rounded shadow border mb-5">
+        <div class="col-md-8">
+            <h1 class="display-4 fw-bold text-danger">Galatasaray SK</h1>
+            <p class="lead text-warning fw-bold">Application officielle de gestion du club.</p>
+            <p class="text-muted">
+                Bienvenue sur la plateforme centralisée de Galatasaray. Cet outil permet au staff technique 
+                et aux supporters de consulter l'effectif des joueurs, de suivre le calendrier des matchs et de gérer 
+                les données de l'équipe première en temps réel.
+            </p>
+        </div>
+        <div class="col-md-4 text-center d-flex flex-column align-items-center justify-content-center">
+            <div class="p-3 rounded-circle shadow-sm border border-2 border-warning" style="background-color: #A90432; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;">
+                <span class="fw-bold fs-2 text-warning" style="letter-spacing: 2px;">GS</span>
+            </div>
+            <small class="text-danger fw-bold mt-2 text-uppercase tracking-wider">Şampiyon 2026</small>
         </div>
     </div>
 
-    <form method="get" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm border">
-        <div class="col-md-5">
-            <input type="text" asp-for="SearchTerm" class="form-control" placeholder="Rechercher par nom ou prénom..." />
-        </div>
-        <div class="col-md-4">
-            <select asp-for="PosteFilter" class="form-select">
-                <option value="">-- Tous les postes --</option>
-                <option value="Gardien">Gardien</option>
-                <option value="Défenseur">Défenseur</option>
-                <option value="Milieu">Milieu</option>
-                <option value="Attaquant">Attaquant</option>
-            </select>
-        </div>
-        <div class="col-md-3 d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100">Filtrer</button>
-            <a asp-page="/Index" class="btn btn-secondary w-100">Reset</a>
-        </div>
-    </form>
+    <div class="row mb-5">
+        <div class="col-100">
+            <div class="card shadow-sm p-4 border-start border-4 border-danger">
+                <h2 class="text-danger fw-bold mb-3">L'Histoire et la Grandeur du Club</h2>
+                <div class="row text-muted">
+                    <div class="col-md-6">
+                        <p>
+                            Fondé en <strong>1905</strong> par Ali Sami Yen et ses camarades du prestigieux lycée de Galatasaray, 
+                            le club s'est donné dès ses premiers instants la mission historique de représenter dignement le football 
+                            turc sur la scène internationale et de rivaliser avec les plus grands clubs européens.
+                        </p>
+                        <p>
+                            Surnommés <em>"Aslanlar"</em> (les Lions), les joueurs arborent fièrement les couleurs mythiques 
+                            <strong>Rouge et Or</strong> (Vişne Çürüğü ve Sarı), symbolisant le feu, la force de la conquête 
+                            et la passion inébranlable de toute une communauté de supporters à travers le monde.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>
+                            Galatasaray a marqué l'histoire du football à tout jamais lors de la saison <strong>1999-2000</strong> 
+                            en réalisant un exploit unique et historique : remporter la <strong>Coupe de la UEFA</strong> en restant invaincu, 
+                            suivie de la prestigieuse <strong>Supercoupe de l'UEFA</strong> face au Real Madrid. 
+                        </p>
+                        <p class="mb-0">
+                            Avec le palmarès le plus impressionnant du pays, incluant un record absolu de titres de champion de 
+                            Süper Lig et de Coupes de Turquie, Galatasaray SK incarne l'excellence et la grandeur du sport. Cette 
+                            plateforme s'inscrit dans cette quête perpétuelle de professionnalisme.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row text-center mt-4">
+                    <div class="col-6 col-md-3 mb-3">
+                        <div class="bg-light p-3 rounded border shadow-sm">
+                            <h4 class="text-warning fw-bold mb-0">Coupe : 1</h4>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Coupe UEFA</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <div class="bg-light p-3 rounded border shadow-sm">
+                            <h4 class="text-warning fw-bold mb-0">Coupe : 1</h4>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Supercoupe UEFA</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <div class="bg-light p-3 rounded border shadow-sm">
+                            <h4 class="text-danger fw-bold mb-0">Record</h4>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Championnats de Turquie</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <div class="bg-light p-3 rounded border shadow-sm">
+                            <h4 class="text-danger fw-bold mb-0">Record</h4>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Coupes de Turquie</small>
+                        </div>
+                    </div>
+                </div>
 
-    @if (!Model.Joueurs.Any()) {
-        <div class="alert alert-warning text-center py-4 shadow-sm" role="alert">
-            Aucun joueur trouvé avec les critères sélectionnés.
+            </div>
         </div>
-    } else {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var joueur in Model.Joueurs) {
-                <partial name="Shared/_JoueurCard" model="joueur" />
-            }
+    </div>
+
+    <div class="row justify-content-center gap-4">
+        <div class="col-md-5 card shadow border-0 text-center p-4">
+            <h3 class="card-title text-secondary">Espace Invité / Supporter</h3>
+            <p class="card-text text-muted my-3">
+                Accédez librement à l'application en lecture seule. Vous pourrez consulter l'effectif complet, 
+                utiliser les filtres de recherche et analyser le calendrier des matchs.
+            </p>
+            
+            <form method="post" asp-page-handler="GuestLogin">
+                <button type="submit" class="btn btn-outline-danger w-100 py-2 fw-bold">
+                    Entrer comme Invité
+                </button>
+            </form>
         </div>
-    }
 
-    @if (Model.TotalPages > 1) {
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-page="/Index" 
-                       asp-route-CurrentPage="@(Model.CurrentPage - 1)" 
-                       asp-route-SearchTerm="@Model.SearchTerm" 
-                       asp-route-PosteFilter="@Model.PosteFilter">Précédent</a>
-                </li>
-
-                @for (int i = 1; i <= Model.TotalPages; i++) {
-                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                        <a class="page-link" asp-page="/Index" 
-                           asp-route-CurrentPage="@i" 
-                           asp-route-SearchTerm="@Model.SearchTerm" 
-                           asp-route-PosteFilter="@Model.PosteFilter">@i</a>
-                    </li>
-                }
-
-                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link" asp-page="/Index" 
-                       asp-route-CurrentPage="@(Model.CurrentPage + 1)" 
-                       asp-route-SearchTerm="@Model.SearchTerm" 
-                       asp-route-PosteFilter="@Model.PosteFilter">Suivant</a>
-                </li>
-            </ul>
-        </nav>
-    }
+        <div class="col-md-5 card shadow border-0 text-center p-4 bg-dark text-white">
+            <h3 class="card-title text-warning">Portail Staff Technique</h3>
+            <p class="card-text text-light my-3">
+                Zone sécurisée réservée à la direction sportive. Identifiez-vous pour débloquer les droits 
+                d'administration, ajouter des recrues ou modifier les fiches de l'effectif.
+            </p>
+            
+            <a asp-page="/Login" class="btn btn-warning w-100 py-2 fw-bold text-dark">
+                Connexion Staff (Admin)
+            </a>
+        </div>
+    </div>
 </div>

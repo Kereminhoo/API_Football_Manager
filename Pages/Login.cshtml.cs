@@ -12,19 +12,24 @@ public class LoginModel : PageModel
 {
     private readonly UserService _userService;
 
+    
     [BindProperty]
     public string Email { get; set; } = string.Empty;
 
+    
     [BindProperty]
     public string Password { get; set; } = string.Empty;
 
+    
     public string ErrorMessage { get; set; } = string.Empty;
 
+    
     public LoginModel(UserService userService)
     {
         _userService = userService;
     }
 
+    // login
     public void OnGet()
     {
         
@@ -36,6 +41,7 @@ public class LoginModel : PageModel
         cmdCheck.CommandText = "SELECT COUNT(*) FROM users WHERE email = 'admin@galatasaray.com'";
         long count = Convert.ToInt64(cmdCheck.ExecuteScalar());
 
+        
         if (count == 0)
         {
             
@@ -49,17 +55,20 @@ public class LoginModel : PageModel
         }
     }
 
+    // page connexion
     public async Task<IActionResult> OnPostAsync()
     {
+        
         if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
         {
             ErrorMessage = "Veuillez remplir tous les champs.";
             return Page();
         }
 
-       
+        // verifier user
         var user = _userService.ValidateUser(Email, Password);
 
+        
         if (user != null)
         {
             
@@ -69,21 +78,27 @@ public class LoginModel : PageModel
                 new Claim(ClaimTypes.Role, user.Role) 
             };
 
+            // creation de la carte id
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             
+            // creation des cookies et envoie au navigateur
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
+            
             return RedirectToPage("/Index");
         }
 
+        
         ErrorMessage = "Email ou mot de passe incorrect.";
         return Page();
     }
 
-    
+    // deco
     public async Task<IActionResult> OnPostLogoutAsync()
     {
+        // Supp les cookies 
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        
         return RedirectToPage("/Index");
     }
 }

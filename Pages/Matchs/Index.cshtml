@@ -26,54 +26,106 @@
         </div>
     </form>
 
-    <div class="card shadow-sm">
-        <table class="table table-hover mb-0">
-            <thead class="table-dark">
-            <tr>
-                <th>Date et Heure</th>
-                <th>Affiche</th>
-                <th>Score</th>
-                @if (User.IsInRole("Admin")) {
-                    <th class="text-center">Actions</th>
-                }
-            </tr>
-            </thead>
-            <tbody>
-            @if (!Model.Matchs.Any())
-            {
+    @if (!Model.MatchsAvenir.Any() && !Model.MatchsJoues.Any())
+    {
+        <div class="alert alert-warning text-center py-4 shadow-sm">
+            Aucune rencontre ne correspond à vos critères de recherche.
+        </div>
+    }
+    else
+    {
+        <h3 class="text-secondary fw-bold mb-3 mt-2">Rencontres à venir</h3>
+        <div class="card shadow-sm mb-5">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
                 <tr>
-                    <td colspan="@(User.IsInRole("Admin") ? 4 : 3)" class="text-center text-muted py-4">Aucune rencontre ne correspond à vos critères de recherche.</td>
-                </tr>
-            }
-            @foreach (var m in Model.Matchs)
-            {
-                <tr>
-                    <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@m.NomEquipeDomicile <strong>vs</strong> @m.NomEquipeExterieur</td>
-                    <td>
-                        <span class="badge bg-primary fs-6">
-                            @m.ScoreDomicile - @m.ScoreExterieur
-                        </span>
-                    </td>
-                    
+                    <th>Date et Heure</th>
+                    <th>Affiche</th>
+                    <th>Statut</th>
                     @if (User.IsInRole("Admin")) {
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                
-                                <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier</a>
-                                
-                                <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match définitivement ?');">
-                                    <input type="hidden" name="id" value="@m.Id" />
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                                </form>
-                            </div>
-                        </td>
+                        <th class="text-center">Actions</th>
                     }
                 </tr>
-            }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                @if (!Model.MatchsAvenir.Any())
+                {
+                    <tr>
+                        <td colspan="@(User.IsInRole("Admin") ? 4 : 3)" class="text-center text-muted py-3">Aucun match programmé à venir.</td>
+                    </tr>
+                }
+                @foreach (var m in Model.MatchsAvenir)
+                {
+                    <tr>
+                        <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@m.NomEquipeDomicile <strong class="text-danger">vs</strong> @m.NomEquipeExterieur</td>
+                        <td>
+                            <span class="badge bg-secondary fs-6">À venir</span>
+                        </td>
+                        @if (User.IsInRole("Admin")) {
+                            <td class="text-center">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier / Score</a>
+                                    <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce match à venir ?');">
+                                        <input type="hidden" name="id" value="@m.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="text-success fw-bold mb-3">Résultats des matchs passés</h3>
+        <div class="card shadow-sm mb-4">
+            <table class="table table-hover mb-0">
+                <thead class="table-success table-dark">
+                <tr>
+                    <th>Date et Heure</th>
+                    <th>Affiche</th>
+                    <th>Score Final</th>
+                    @if (User.IsInRole("Admin")) {
+                        <th class="text-center">Actions</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                @if (!Model.MatchsJoues.Any())
+                {
+                    <tr>
+                        <td colspan="@(User.IsInRole("Admin") ? 4 : 3)" class="text-center text-muted py-3">Aucun historique de match disponible.</td>
+                    </tr>
+                }
+                @foreach (var m in Model.MatchsJoues)
+                {
+                    <tr>
+                        <td>@m.DateMatch.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@m.NomEquipeDomicile <strong>vs</strong> @m.NomEquipeExterieur</td>
+                        <td>
+                            <span class="badge bg-primary fs-6">
+                                @m.ScoreDomicile - @m.ScoreExterieur
+                            </span>
+                        </td>
+                        @if (User.IsInRole("Admin")) {
+                            <td class="text-center">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a asp-page="/Matchs/Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                    <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Supprimer ce résultat définitivement ?');">
+                                        <input type="hidden" name="id" value="@m.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
 
     @if (Model.TotalPages > 1) {
         <nav aria-label="Page navigation" class="mt-4">

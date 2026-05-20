@@ -8,19 +8,23 @@ namespace FootManager.Services;
 public class UserService
 {
     private readonly NpgsqlConnection _connection;
+    
+    // hashage outils ms
     private readonly PasswordHasher<string> _passwordHasher = new();
 
+    
     public UserService(NpgsqlConnection connection)
     {
         _connection = connection;
     }
 
-    
+    // verif donnee
     public User? ValidateUser(string email, string password)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
 
         using var cmd = _connection.CreateCommand();
+        // recup user via le mail
         cmd.CommandText = "SELECT id, email, password_hash, role FROM users WHERE email = @email";
         cmd.Parameters.AddWithValue("email", email);
 
@@ -31,18 +35,20 @@ public class UserService
             {
                 Id = reader.GetInt32(0),
                 Email = reader.GetString(1),
-                PasswordHash = reader.GetString(2),
+                PasswordHash = reader.GetString(2), 
                 Role = reader.GetString(3)
             };
 
-            
+            // on hash le mdp et compare avec la bd
             var result = _passwordHasher.VerifyHashedPassword(user.Email, user.PasswordHash, password);
+            
+            
             if (result == PasswordVerificationResult.Success)
             {
                 return user;
             }
         }
-        return null;
+        return null; 
     }
 
     

@@ -6,19 +6,23 @@ namespace FootManager.Services;
 
 public class MatchService
 {
+    
     private readonly NpgsqlConnection _connection;
 
+    
     public MatchService(NpgsqlConnection connection)
     {
         _connection = connection;
     }
 
+    
     public List<Match> GetAll()
     {
         var matchs = new List<Match>();
         if (_connection.State != ConnectionState.Open) _connection.Open();
 
         using var cmd = _connection.CreateCommand();
+        // double join pour equipe int et ext
         cmd.CommandText = @"
             SELECT m.id, m.date_match, m.score_domicile, m.score_exterieur, 
                    ed.nom as nom_dom, ee.nom as nom_ext
@@ -33,22 +37,24 @@ public class MatchService
             matchs.Add(new Match
             {
                 Id = reader.GetInt32(0),
-                DateMatch = reader.GetDateTime(1),
+                DateMatch = reader.GetDateTime(1), 
                 ScoreDomicile = reader.GetInt32(2),
                 ScoreExterieur = reader.GetInt32(3),
-                NomEquipeDomicile = reader.GetString(4),
-                NomEquipeExterieur = reader.GetString(5)
+                NomEquipeDomicile = reader.GetString(4), 
+                NomEquipeExterieur = reader.GetString(5) 
             });
         }
         return matchs;
     }
 
-    
+    // pagination et recherche
     public List<Match> GetFiltered(string? search, int page, int pageSize, out int totalCount)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
 
+        // rechrche
         string searchPattern = string.IsNullOrEmpty(search) ? "%" : $"%{search}%";
+        
         
         using (var cmdCount = _connection.CreateCommand())
         {
@@ -57,16 +63,16 @@ public class MatchService
                 FROM matchs m
                 JOIN equipes ed ON m.equipe_domicile_id = ed.id
                 JOIN equipes ee ON m.equipe_exterieur_id = ee.id
-                WHERE ed.nom ILIKE @s OR ee.nom ILIKE @s";
+                WHERE ed.nom ILIKE @s OR ee.nom ILIKE @s"; 
             
             cmdCount.Parameters.AddWithValue("s", searchPattern);
-            totalCount = Convert.ToInt32(cmdCount.ExecuteScalar());
+            totalCount = Convert.ToInt32(cmdCount.ExecuteScalar()); 
         }
 
-        
         var matchs = new List<Match>();
-        int offset = (page - 1) * pageSize;
+        int offset = (page - 1) * pageSize; 
 
+        
         using (var cmdData = _connection.CreateCommand())
         {
             cmdData.CommandText = @"
@@ -100,6 +106,7 @@ public class MatchService
         return matchs;
     }
 
+    // selection du match par son id
     public Match? GetById(int id)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
@@ -121,6 +128,7 @@ public class MatchService
         return null;
     }
 
+    // ajout match
     public void Add(Match m)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
@@ -134,9 +142,10 @@ public class MatchService
         cmd.Parameters.AddWithValue("ext", m.EquipeExterieurId);
         cmd.Parameters.AddWithValue("sdom", m.ScoreDomicile);
         cmd.Parameters.AddWithValue("sext", m.ScoreExterieur);
-        cmd.ExecuteNonQuery();
+        cmd.ExecuteNonQuery(); 
     }
 
+    // maj match
     public void Update(Match m)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();
@@ -153,6 +162,7 @@ public class MatchService
         cmd.ExecuteNonQuery();
     }
 
+    // supp match
     public void Delete(int id)
     {
         if (_connection.State != ConnectionState.Open) _connection.Open();

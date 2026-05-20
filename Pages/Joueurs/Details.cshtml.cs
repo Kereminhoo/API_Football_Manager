@@ -9,19 +9,19 @@ public class Details : PageModel
 {
     private readonly JoueurService _joueurService;
 
-    public Joueur Joueur { get; set; } = default!;
+    public Joueur Joueur { get; set; } = default!; //valeur joueur choisi ( pour le voir en detail)
 
-    public Details(JoueurService joueurService)
+    public Details(JoueurService joueurService) // pour service
     {
         _joueurService = joueurService;
     }
 
-    public IActionResult OnGet(int id)
+    public IActionResult OnGet(int id) // recup id
     {
-        var j = _joueurService.GetById(id);
+        var j = _joueurService.GetById(id); //recup info via id
         if (j == null)
         {
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Joueurs/Index");
         }
 
         Joueur = j;

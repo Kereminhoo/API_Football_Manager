@@ -5,7 +5,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    
+    options.Conventions.AuthorizeFolder("/");
+    
+    
+    options.Conventions.AllowAnonymousToPage("/Index");
+    options.Conventions.AllowAnonymousToPage("/Login");
+});
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -15,7 +23,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Login";   
     });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); 
 
 
 builder.Services.AddScoped(_ => 
@@ -35,7 +43,7 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error"); 
     app.UseHsts();
 }
 else
@@ -43,11 +51,10 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-app.UseStatusCodePagesWithReExecute("/Error/{0}");
+app.UseStatusCodePagesWithReExecute("/Error/{0}"); 
 app.UseHttpsRedirection();
 app.UseStaticFiles(); 
 app.UseRouting();
-
 
 app.UseAuthentication(); 
 app.UseAuthorization();  

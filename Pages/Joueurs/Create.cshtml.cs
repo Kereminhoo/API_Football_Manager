@@ -7,7 +7,7 @@ using FootManager.Services;
 
 namespace FootManager.Pages.Joueurs;
 
-[Authorize(Roles = "Admin")] 
+[Authorize(Roles = "Admin")] // verif acces admin 
 public class CreateModel : PageModel
 {
     private readonly JoueurService _joueurService;
@@ -16,8 +16,9 @@ public class CreateModel : PageModel
     [BindProperty]
     public Joueur NouveauJoueur { get; set; } = new();
     
-    public SelectList ListeEquipes { get; set; }
+    public SelectList ListeEquipes { get; set; } 
 
+    // injection des dependances pour le service
     public CreateModel(JoueurService js, EquipeService es)
     {
         _joueurService = js;
@@ -35,10 +36,10 @@ public class CreateModel : PageModel
         if (!ModelState.IsValid) 
         {
             OnGet();
-            return Page();
+            return Page(); // si erreur on insert pas, retour a la page
         }
 
         _joueurService.Add(NouveauJoueur);
-        return RedirectToPage("/Index");
+        return RedirectToPage("/Joueurs/Index"); // si ok, on insert a la bd et on reviens a la pge d'effectif
     }
 }
